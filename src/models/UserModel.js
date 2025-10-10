@@ -1,34 +1,34 @@
 import mongoose from "mongoose";
 
-class UserModel {
+class User {
   constructor() {
     const userSchema = new mongoose.Schema(
       {
         name: {
           type: String,
-          required: true,
-          trim: true,
+          required: [true, "Name is required"],
+         
         },
-
         email: {
           type: String,
-          required: true,
+          required: [true, "Email is required"],
           unique: true,
-          lowercase: true,
+          match: [
+            /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+            "Please provide a valid email address",
+          ],
         },
-
         password: {
           type: String,
-          required: true,
-          minlength: 6,
+          required: [true, "Password is required"],
+          minlength: [6, "Password must be at least 6 characters long"],
+          
         },
-
         role: {
           type: String,
-          enum: ["Particulier", "Admin"],
-          default: "Particulier", 
+          enum: ["particulier", "admin"],
+          default: "particulier",
         },
-
         verified: {
           type: Boolean,
           default: false,
@@ -37,22 +37,12 @@ class UserModel {
       { timestamps: true }
     );
 
-    this.model = mongoose.model("User", userSchema);
+    this.model = mongoose.models.User || mongoose.model("User", userSchema);
   }
 
-  async createUser(data) {
-    const user = new this.model(data);
-    return await user.save();
+  getModel() {
+    return this.model;
   }
-
-  async getAllUsers(){
-    return await this.model.find();
-  }
-
-  async getUserByEmail(){
-    return await this.model.findOne({ email });
-  }
-
 }
 
-export default new UserModel();
+export default new User().getModel();
