@@ -23,17 +23,13 @@ class User {
           type: String,
           required: [true, "Password is required"],
           minlength: [6, "Password must be at least 6 characters long"],
-          
         },
         role: {
           type: String,
           enum: ["particulier", "admin"],
           default: "particulier",
         },
-        verified: {
-          type: Boolean,
-          default: false,
-        },
+        
       },
       { timestamps: true }
     );
@@ -48,6 +44,8 @@ class User {
         next(err);
       }
     });
+
+    
 
     this.model = mongoose.models.User || mongoose.model("User", userSchema);
   }
