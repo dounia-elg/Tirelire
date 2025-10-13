@@ -29,7 +29,24 @@ class User {
           enum: ["particulier", "admin"],
           default: "particulier",
         },
-        
+        // KYC fields
+        idNumber: {
+          type: String,
+          default: null,
+        },
+        idImagePath: {
+          type: String,
+          default: null,
+        },
+        faceVerified: {
+          type: Boolean,
+          default: false,
+        },
+        kycStatus: {
+          type: String,
+          enum: ["pending", "verified", "rejected"],
+          default: "pending",
+        },
       },
       { timestamps: true }
     );
