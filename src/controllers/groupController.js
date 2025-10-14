@@ -35,6 +35,9 @@ export default class GroupController {
 
       return res.status(201).json({ success: true, group: populated });
     } catch (error) {
+      if (error?.code === 11000 && error?.keyPattern?.name) {
+        return res.status(400).json({ success: false, message: "Group name must be unique" });
+      }
       return res.status(500).json({ success: false, message: error.message });
     }
   }

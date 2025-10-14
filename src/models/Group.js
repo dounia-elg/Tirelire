@@ -4,7 +4,7 @@ class Group {
   constructor() {
     const groupSchema = new mongoose.Schema(
       {
-        name: { type: String, required: true, trim: true },
+        name: { type: String, required: true, trim: true, unique: true },
         amount: { type: Number, required: true, min: [1, "Amount must be > 0"] },
         frequency: { type: Number, required: true, min: [1, "Frequency must be > 0"] },
         creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
@@ -13,7 +13,8 @@ class Group {
       { timestamps: true }
     );
 
-    groupSchema.index({ name: 1, creator: 1 }, { unique: false });
+    
+    groupSchema.index({ name: 1 }, { unique: true });
 
     this.model = mongoose.models.Group || mongoose.model("Group", groupSchema);
   }
