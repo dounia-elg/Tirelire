@@ -28,7 +28,12 @@ export default class GroupController {
         members: [creatorId]
       });
 
-      return res.status(201).json({ success: true, group });
+      const populated = await group.populate([
+        { path: "creator", select: "email" },
+        { path: "members", select: "email" }
+      ]);
+
+      return res.status(201).json({ success: true, group: populated });
     } catch (error) {
       return res.status(500).json({ success: false, message: error.message });
     }
