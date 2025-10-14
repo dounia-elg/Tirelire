@@ -5,6 +5,7 @@ import { authenticateToken } from "../middlewares/auth.js";
 const router = express.Router();
 
 router.post("/", authenticateToken, GroupController.create);
+router.post("/:id/invite", authenticateToken, GroupController.invite);
 
 export default router;
 
