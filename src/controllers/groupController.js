@@ -2,6 +2,25 @@ import Group from "../models/Group.js";
 import User from "../models/User.js";
 
 export default class GroupController {
+  static async getGroupDetails(req, res) {
+    try {
+      const group = await Group.findById(req.params.id).populate([
+        { path: "creator", select: "name email" },
+        { path: "members", select: "name email" }
+      ]);
+
+      if (!group) {
+        return res.status(404).json({ success: false, message: "Group not found" });
+      }
+
+      return res.status(200).json({ success: true, group });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+
+  
   static async create(req, res) {
     try {
       const { name, amount, frequency } = req.body;
@@ -30,8 +49,8 @@ export default class GroupController {
       });
 
       const populated = await group.populate([
-        { path: "creator", select: "email" },
-        { path: "members", select: "email" }
+        { path: "creator", select: "name email" },
+        { path: "members", select: "name email" }
       ]);
 
       return res.status(201).json({ success: true, group: populated });
@@ -43,6 +62,9 @@ export default class GroupController {
     }
   }
 
+
+
+  
   static async invite(req, res) {
     try {
       const groupId = req.params.id;
@@ -86,8 +108,8 @@ export default class GroupController {
       }
 
       const populated = await group.populate([
-        { path: "creator", select: "email" },
-        { path: "members", select: "email" }
+        { path: "creator", select: "name email" },
+        { path: "members", select: "name email" }
       ]);
 
       return res.status(200).json({
