@@ -14,7 +14,6 @@ class Group {
     );
 
     
-    groupSchema.index({ name: 1 }, { unique: true });
 
     this.model = mongoose.models.Group || mongoose.model("Group", groupSchema);
   }
