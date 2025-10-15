@@ -51,4 +51,34 @@ describe('POST /api/groups (simple)', () => {
   });
 });
 
+describe('POST /api/groups/:id/invite', () => {
+  test('invites two members by email', async () => {
+    const token = await registerAndGetToken();
+    
+    await request(app).post('/api/auth/register').send({ name: 'u1', email: 'u1@example.com', password: 'password123' }).expect(201);
+    await request(app).post('/api/auth/register').send({ name: 'u2', email: 'u2@example.com', password: 'password123' }).expect(201);
+
+   
+    const createRes = await request(app)
+      .post('/api/groups')
+      .set('Authorization', `Bearer ${token}`)
+      .send({ name: 'G1', amount: 100, frequency: 30 })
+      .expect(201);
+
+    const groupId = createRes.body.group._id;
+
+    
+    const inviteRes = await request(app)
+      .post(`/api/groups/${groupId}/invite`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({ emails: ['u1@example.com', 'u2@example.com'] })
+      .expect(200);
+
+    expect(inviteRes.body.success).toBe(true);
+    expect(inviteRes.body.added).toBe(2);
+    expect(inviteRes.body.alreadyMembers.length).toBe(0);
+    expect(inviteRes.body.notFound.length).toBe(0);
+  });
+});
+
 
