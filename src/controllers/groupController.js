@@ -41,7 +41,7 @@ export default class GroupController {
   
   static async create(req, res) {
     try {
-      const { name, amount, frequency, round } = req.body;
+      const { name, amount, maxMembers, round } = req.body;
 
       if (!name || typeof name !== "string" || name.trim().length === 0) {
         return res.status(400).json({ success: false, message: "Group name is required" });
@@ -49,8 +49,8 @@ export default class GroupController {
       if (amount == null || isNaN(Number(amount)) || Number(amount) <= 0) {
         return res.status(400).json({ success: false, message: "Amount must be > 0" });
       }
-      if (frequency == null || isNaN(Number(frequency)) || Number(frequency) <= 0) {
-        return res.status(400).json({ success: false, message: "Frequency must be > 0" });
+      if (maxMembers == null || isNaN(Number(maxMembers)) || Number(maxMembers) <= 0) {
+        return res.status(400).json({ success: false, message: "maxMembers must be > 0" });
       }
 
       
@@ -68,7 +68,7 @@ export default class GroupController {
       const group = await Group.create({
         name: name.trim(),
         amount: Number(amount),
-        frequency: Number(frequency),
+        maxMembers: Number(maxMembers),
         round: normalizedRound || undefined,
         creator: creatorId,
         members: [creatorId]
