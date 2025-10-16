@@ -74,6 +74,15 @@ export default class GroupController {
         members: [creatorId]
       });
 
+      
+      group.turns = [creatorId];
+      
+      const now = new Date();
+      const addDays = (d) => new Date(now.getTime() + d * 24 * 60 * 60 * 1000);
+      const roundToDays = { week: 7, month: 30, "15days": 15 };
+      group.nextDate = addDays(roundToDays[group.round || "month"]);
+      await group.save();
+
       const populated = await group.populate([
         { path: "creator", select: "name email" },
         { path: "members", select: "name email" }
