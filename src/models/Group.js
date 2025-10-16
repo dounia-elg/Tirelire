@@ -7,6 +7,7 @@ class Group {
         name: { type: String, required: true, trim: true, unique: true },
         amount: { type: Number, required: true, min: [1, "Amount must be > 0"] },
         frequency: { type: Number, required: true, min: [1, "Frequency must be > 0"] },
+        round: { type: String, enum: ["week", "month", "15days"], default: "month" },
         creator: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
         members: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }]
       },

@@ -41,7 +41,7 @@ export default class GroupController {
   
   static async create(req, res) {
     try {
-      const { name, amount, frequency } = req.body;
+      const { name, amount, frequency, round } = req.body;
 
       if (!name || typeof name !== "string" || name.trim().length === 0) {
         return res.status(400).json({ success: false, message: "Group name is required" });
@@ -53,6 +53,13 @@ export default class GroupController {
         return res.status(400).json({ success: false, message: "Frequency must be > 0" });
       }
 
+      
+      const roundMap = { semaine: "week", mois: "month", "15jours": "15days" };
+      const normalizedRound = roundMap[(round || "").toLowerCase()] || round;
+      if (normalizedRound && !["week", "month", "15days"].includes(normalizedRound)) {
+        return res.status(400).json({ success: false, message: "round must be one of: week, month, 15days" });
+      }
+
       const creatorId = req.user?._id;
       if (!creatorId) {
         return res.status(401).json({ success: false, message: "Authentication required" });
@@ -62,6 +69,7 @@ export default class GroupController {
         name: name.trim(),
         amount: Number(amount),
         frequency: Number(frequency),
+        round: normalizedRound || undefined,
         creator: creatorId,
         members: [creatorId]
       });
