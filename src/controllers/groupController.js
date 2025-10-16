@@ -2,6 +2,24 @@ import Group from "../models/Group.js";
 import User from "../models/User.js";
 
 export default class GroupController {
+  static async listAllGroups(req, res) {
+    try {
+      if (!req.user || req.user.role !== "admin") {
+        return res.status(403).json({ success: false, message: "Admin access required" });
+      }
+
+      const groups = await Group.find({}).populate([
+        { path: "creator", select: "name email" },
+        { path: "members", select: "name email" }
+      ]);
+
+      return res.status(200).json({ success: true, groups });
+    } catch (error) {
+      return res.status(500).json({ success: false, message: error.message });
+    }
+  }
+
+  
   static async getGroupDetails(req, res) {
     try {
       const group = await Group.findById(req.params.id).populate([
