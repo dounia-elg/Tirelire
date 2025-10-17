@@ -5,6 +5,8 @@ import { authenticateToken } from "../middlewares/auth.js";
 const router = express.Router();
 
 
+
 router.post("/", authenticateToken, paymentController.createStripePayment);
+router.get("/history", authenticateToken, paymentController.getPaymentHistory);
 
 export default router;

@@ -27,6 +27,18 @@ class paymentController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  static async getPaymentHistory(req, res) {
+    try {
+      
+      const payments = await Payment.find({ user: req.user._id })
+        .sort({ createdAt: -1 })
+        .populate({ path: "user", select: "name email" });
+      res.json({ payments });
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 export default paymentController;
