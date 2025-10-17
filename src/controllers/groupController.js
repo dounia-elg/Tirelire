@@ -1,7 +1,5 @@
 import Group from "../models/Group.js";
 import User from "../models/User.js";
-import Stripe from "stripe";
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export default class GroupController {
   static async listAllGroups(req, res) {
@@ -170,19 +168,5 @@ export default class GroupController {
   }
 }
 
-export const createStripePayment = async (req, res) => {
-  try {
-    const { amount, currency = 'usd' } = req.body;
-   
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100,
-      currency,
-     
-    });
-    res.json({ clientSecret: paymentIntent.client_secret });
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
 
 

@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import kycRoutes from "./routes/kycRoutes.js";
 
+
 const app = express();
 
 app.use(express.json());
@@ -22,7 +23,9 @@ app.get("/health", (req, res) => {
 app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/groups", groupRoutes);
-app.use("/api/kyc", kycRoutes);
+
+
+app.use("/api/contributions", require("./routes/paymentRoutes.js").default);
 
 export default app;
 
