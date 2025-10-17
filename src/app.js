@@ -1,3 +1,4 @@
+import "./utils/paymentReminder.js";
 import express from "express";
 import userRoutes from "./routes/userRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
