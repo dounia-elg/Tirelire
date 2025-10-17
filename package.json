@@ -30,6 +30,8 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "transform": {}
+    "transform": {},
+    "setupFiles": ["<rootDir>/jest.setup.js"],
+    "globalTeardown": "<rootDir>/jest.teardown.cjs"
   }
 }

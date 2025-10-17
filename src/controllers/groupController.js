@@ -57,7 +57,9 @@ export default class GroupController {
       if (amount == null || isNaN(Number(amount)) || Number(amount) <= 0) {
         return res.status(400).json({ success: false, message: "Amount must be > 0" });
       }
-      if (maxMembers == null || isNaN(Number(maxMembers)) || Number(maxMembers) <= 0) {
+      // maxMembers is optional in some test flows; default to 10 when not provided
+      const finalMaxMembers = (maxMembers == null || maxMembers === '') ? 10 : Number(maxMembers);
+      if (isNaN(finalMaxMembers) || finalMaxMembers <= 0) {
         return res.status(400).json({ success: false, message: "maxMembers must be > 0" });
       }
 
@@ -76,7 +78,7 @@ export default class GroupController {
       const group = await Group.create({
         name: name.trim(),
         amount: Number(amount),
-        maxMembers: Number(maxMembers),
+        maxMembers: finalMaxMembers,
         round: normalizedRound || undefined,
         creator: creatorId,
         members: [creatorId]

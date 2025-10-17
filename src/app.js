@@ -28,6 +28,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/contributions", paymentRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/kyc", kycRoutes);
 
 
 

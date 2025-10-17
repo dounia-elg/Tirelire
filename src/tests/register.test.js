@@ -1,3 +1,6 @@
+process.env.STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || 'sk_test_please_replace';
+process.env.NODE_ENV = 'test';
+
 import request from 'supertest';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';

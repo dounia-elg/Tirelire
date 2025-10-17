@@ -2,8 +2,8 @@ import cron from "node-cron";
 import Group from "../models/Group.js";
 import NotificationController from "../controllers/notificationController.js";
 
-
-cron.schedule("0 8 * * *", async () => {
+if (process.env.DISABLE_CRON !== 'true') {
+  cron.schedule("0 8 * * *", async () => {
   try {
     
     const now = new Date();
@@ -22,4 +22,5 @@ cron.schedule("0 8 * * *", async () => {
   } catch (error) {
     console.error("[CRON] Error sending payment reminders:", error);
   }
-});
+  });
+}
