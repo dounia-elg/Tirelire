@@ -4,6 +4,7 @@ import authRoutes from "./routes/authRoutes.js";
 import groupRoutes from "./routes/groupRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import kycRoutes from "./routes/kycRoutes.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/groups", groupRoutes);
 app.use("/api/contributions", paymentRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 
 
