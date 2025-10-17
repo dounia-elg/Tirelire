@@ -1,5 +1,6 @@
 
 import Payment from "../models/Payment.js";
+import NotificationController from "./notificationController.js";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
@@ -21,6 +22,12 @@ class paymentController {
         stripePaymentId: paymentIntent.id,
         status: paymentIntent.status || "pending"
       });
+
+      
+      await NotificationController.createNotification(
+        req.user._id,
+        `Payment of ${amount} ${currency} created. Status: ${payment.status}`
+      );
 
       res.json({ clientSecret: paymentIntent.client_secret, paymentId: payment._id });
     } catch (error) {
