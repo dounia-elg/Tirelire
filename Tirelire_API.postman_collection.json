@@ -1,0 +1,803 @@
+{
+	"info": {
+		"name": "Tirelire API",
+		"description": "Complete API collection for Tirelire - Group Savings Management System",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{jwt_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "🔑 Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"role\": \"particulier\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    const jsonData = pm.response.json();",
+									"    if (jsonData.token) {",
+									"        pm.collectionVariables.set('jwt_token', jsonData.token);",
+									"        console.log('Token saved:', jsonData.token);",
+									"    }",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "auth", "login"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👤 Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Create User (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Admin User\",\n  \"email\": \"admin@example.com\",\n  \"password\": \"admin123\",\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "users"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔒 KYC",
+			"item": [
+				{
+					"name": "Upload ID Document",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "idImage",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "idNumber",
+									"value": "AB123456",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kyc/upload",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "upload"]
+						}
+					}
+				},
+				{
+					"name": "Get KYC Status",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kyc/status",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "status"]
+						}
+					}
+				},
+				{
+					"name": "Verify Face",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "selfie",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kyc/verify-face",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "verify-face"]
+						}
+					}
+				},
+				{
+					"name": "Review KYC (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"action\": \"approve\",\n  \"note\": \"KYC verified successfully\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/kyc/review/:userId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "review", ":userId"],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List Pending KYC (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kyc/pending",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "pending"]
+						}
+					}
+				},
+				{
+					"name": "Get KYC History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/kyc/history/:userId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "kyc", "history", ":userId"],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👥 Groups",
+			"item": [
+				{
+					"name": "Create Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Summer Savings Group\",\n  \"amount\": 1000,\n  \"maxMembers\": 10,\n  \"round\": \"month\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/groups",
+							"host": ["{{base_url}}"],
+							"path": ["api", "groups"]
+						}
+					}
+				},
+				{
+					"name": "Get Group Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/groups/:id",
+							"host": ["{{base_url}}"],
+							"path": ["api", "groups", ":id"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List All Groups (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/groups",
+							"host": ["{{base_url}}"],
+							"path": ["api", "groups"]
+						}
+					}
+				},
+				{
+					"name": "Invite Members",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emails\": [\"user1@example.com\", \"user2@example.com\"]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/groups/:id/invite",
+							"host": ["{{base_url}}"],
+							"path": ["api", "groups", ":id", "invite"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Distribute Funds",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/groups/:id/distribute",
+							"host": ["{{base_url}}"],
+							"path": ["api", "groups", ":id", "distribute"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "💰 Payments & Contributions",
+			"item": [
+				{
+					"name": "Create Stripe Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 1000,\n  \"currency\": \"mad\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contributions",
+							"host": ["{{base_url}}"],
+							"path": ["api", "contributions"]
+						}
+					}
+				},
+				{
+					"name": "Get User Payment History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contributions/history",
+							"host": ["{{base_url}}"],
+							"path": ["api", "contributions", "history"]
+						}
+					}
+				},
+				{
+					"name": "Get Group Payment History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contributions/group/:groupId/history",
+							"host": ["{{base_url}}"],
+							"path": ["api", "contributions", "group", ":groupId", "history"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Contribute to Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 1000\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/contributions/group/:groupId/contribute",
+							"host": ["{{base_url}}"],
+							"path": ["api", "contributions", "group", ":groupId", "contribute"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Group Contributions",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/contributions/group/:groupId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "contributions", "group", ":groupId"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "💬 Messages",
+			"item": [
+				{
+					"name": "Send Text Message",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Hello everyone!\",\n  \"messageType\": \"text\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/messages/group/:groupId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "messages", "group", ":groupId"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Audio Message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "audio",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "messageType",
+									"value": "audio",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/messages/group/:groupId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "messages", "group", ":groupId"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Group Messages",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/messages/group/:groupId?limit=50&offset=0",
+							"host": ["{{base_url}}"],
+							"path": ["api", "messages", "group", ":groupId"],
+							"query": [
+								{
+									"key": "limit",
+									"value": "50"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🎫 Tickets",
+			"item": [
+				{
+					"name": "Create Ticket",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"subject\": \"Payment issue\",\n  \"description\": \"I'm having trouble making a payment\",\n  \"groupId\": \"optional_group_id_here\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tickets",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tickets"]
+						}
+					}
+				},
+				{
+					"name": "Get User Tickets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tickets",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tickets"]
+						}
+					}
+				},
+				{
+					"name": "Get Ticket Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tickets/:ticketId",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tickets", ":ticketId"],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "List All Tickets (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/tickets/admin?status=open",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tickets", "admin"],
+							"query": [
+								{
+									"key": "status",
+									"value": "open",
+									"disabled": true
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Respond to Ticket (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"adminResponse\": \"We've fixed the issue. Please try again.\",\n  \"status\": \"resolved\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/tickets/:ticketId/respond",
+							"host": ["{{base_url}}"],
+							"path": ["api", "tickets", ":ticketId", "respond"],
+							"variable": [
+								{
+									"key": "ticketId",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🔔 Notifications",
+			"item": [
+				{
+					"name": "Get User Notifications",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/notifications",
+							"host": ["{{base_url}}"],
+							"path": ["api", "notifications"]
+						}
+					}
+				},
+				{
+					"name": "Mark Notification as Read",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/notifications/:id/read",
+							"host": ["{{base_url}}"],
+							"path": ["api", "notifications", ":id", "read"],
+							"variable": [
+								{
+									"key": "id",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "👨‍💼 Admin",
+			"item": [
+				{
+					"name": "Send Message to User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"Please verify your account details\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/users/:userId/message",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "users", ":userId", "message"],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Message to Group",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"message\": \"Important announcement for your group\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/admin/groups/:groupId/message",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "groups", ":groupId", "message"],
+							"variable": [
+								{
+									"key": "groupId",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/users",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "users"]
+						}
+					}
+				},
+				{
+					"name": "Get User Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/admin/users/:userId/stats",
+							"host": ["{{base_url}}"],
+							"path": ["api", "admin", "users", ":userId", "stats"],
+							"variable": [
+								{
+									"key": "userId",
+									"value": ""
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "🏥 Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
+

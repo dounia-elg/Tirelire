@@ -47,6 +47,18 @@ class User {
           enum: ["pending", "verified", "rejected"],
           default: "pending",
         },
+        trustScore: {
+          type: Number,
+          default: 0,
+        },
+        kycHistory: [
+          {
+            action: { type: String, enum: ["submitted", "faceVerified", "approved", "rejected"], required: true },
+            admin: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+            note: { type: String, default: null },
+            date: { type: Date, default: Date.now }
+          }
+        ],
       },
       { timestamps: true }
     );

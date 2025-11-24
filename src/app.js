@@ -6,6 +6,9 @@ import groupRoutes from "./routes/groupRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import kycRoutes from "./routes/kycRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import messageRoutes from "./routes/messageRoutes.js";
+import ticketRoutes from "./routes/ticketRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
 
 
 const app = express();
@@ -29,6 +32,9 @@ app.use("/api/groups", groupRoutes);
 app.use("/api/contributions", paymentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/kyc", kycRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/tickets", ticketRoutes);
+app.use("/api/admin", adminRoutes);
 
 
 

@@ -9,6 +9,7 @@ router.post("/", authenticateToken, GroupController.create);
 router.post("/:id/invite", authenticateToken, GroupController.invite);
 router.get("/:id", authenticateToken, GroupController.getGroupDetails);
 router.get("/", authenticateToken, GroupController.listAllGroups);
+router.post('/:id/distribute', authenticateToken, GroupController.distribute);
 
 
 export default router;

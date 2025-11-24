@@ -27,7 +27,19 @@ const registerAndGetToken = async () => {
     .post('/api/auth/register')
     .send({ name: 'chiwahd', email: 'chiwahd@example.com', password: 'password123' })
     .expect(201);
-  return res.body.token;
+  const token = res.body.token;
+  // Provide a dummy idNumber to reach verified status on verify-face
+  await request(app)
+    .post('/api/kyc/upload')
+    .set('Authorization', `Bearer ${token}`)
+    .send({ idNumber: 'ID123456' })
+    .expect(200);
+  await request(app)
+    .post('/api/kyc/verify-face')
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200);
+
+  return token;
 };
 
 describe('POST /api/groups (simple)', () => {

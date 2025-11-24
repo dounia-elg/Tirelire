@@ -6,6 +6,15 @@ export default class AuthController {
   static async register(req, res) {
     try {
       const { name, email, password, role } = req.body;
+      // const { firstName, lastName, email, password, confirmPassword } = req.body;
+      // const response = await fetch('http://localhost:3001/api/v1/auth/register', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({  firstName, lastName, email, password, confirmPassword })
+      // });
+      // return res.json(await response.json());
 
       const user = await User.create({
         name,
@@ -34,7 +43,14 @@ export default class AuthController {
   static async login(req, res) {
     try {
       const { email, password } = req.body;
-
+      // const response = await fetch('http://localhost:3001/api/v1/auth/login', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({ email, password })
+      // });
+      // return res.json(await response.json());
       
       const user = await User.findOne({ email });
       if (!user) {
